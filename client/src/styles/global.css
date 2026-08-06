@@ -83,3 +83,68 @@ body {
     min-height: 220px;
   }
 }
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 4px 0;
+  }
+  .split-layout {
+    gap: 8px;
+  }
+  .split-bar .ant-space {
+    margin-top: 12px;
+  }
+  .ant-card-body {
+    padding: 12px;
+  }
+  .ant-card .ant-card-head {
+    padding: 0 12px;
+  }
+}
+
+/* 手机上自适应按钮组不换行溢出 */
+@media (max-width: 480px) {
+  .ant-space.ant-space-horizontal {
+    flex-wrap: wrap;
+  }
+  .ant-table {
+    font-size: 12px;
+  }
+  .ant-descriptions-item-label {
+    min-width: 80px;
+  }
+}
+
+/* 固定宽度输入框：小屏时收缩到容器宽度 */
+.input-fluid {
+  max-width: 100%;
+}
+
+/* Card extra 操作区：允许换行、输入框自适应 */
+.card-extra-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
+.card-extra-input {
+  width: 260px;
+}
+
+.card-extra-flags {
+  width: 70px;
+}
+
+@media (max-width: 768px) {
+  .card-extra-actions {
+    margin-top: 8px;
+    justify-content: flex-start;
+  }
+  .card-extra-input {
+    width: 100%;
+    min-width: 140px;
+  }
+}

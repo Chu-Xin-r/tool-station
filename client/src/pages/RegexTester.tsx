@@ -64,21 +64,19 @@ export default function RegexTester() {
     <Card
       title="正则表达式测试"
       extra={
-        <span>
+        <div className="card-extra-actions">
           <Input
             value={pattern}
             onChange={(e) => setPattern(e.target.value)}
             placeholder="正则表达式，如 \d{3}-?\d{4}"
-            style={{ width: 260, marginRight: 8 }}
-            className="monospace"
+            className="monospace card-extra-input"
             size="small"
           />
           <Input
             value={flags}
             onChange={(e) => setFlags(e.target.value)}
             placeholder="flags"
-            style={{ width: 70, marginRight: 8 }}
-            className="monospace"
+            className="monospace card-extra-flags"
             size="small"
           />
           <Button type="primary" size="small" onClick={() => setRenderVersion((v) => v + 1)}>
@@ -87,7 +85,6 @@ export default function RegexTester() {
           <Button
             size="small"
             icon={<ClearOutlined />}
-            style={{ marginLeft: 8 }}
             onClick={() => {
               setPattern('');
               setText('');
@@ -95,7 +92,7 @@ export default function RegexTester() {
           >
             清空
           </Button>
-        </span>
+        </div>
       }
     >
       {lastError && (

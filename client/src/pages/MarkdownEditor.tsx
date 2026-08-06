@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
-import { Card, Segmented, Input } from 'antd';
+import { Card, Segmented, Input, Grid } from 'antd';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
 const { TextArea } = Input;
+const { useBreakpoint } = Grid;
 
 const sample = `# Markdown 在线编辑
 
@@ -33,6 +34,8 @@ const hello = () => console.log('Hello!');
 export default function MarkdownEditor() {
   const [mode, setMode] = useState<'edit' | 'preview' | 'split'>('edit');
   const [text, setText] = useState(sample);
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
 
   const html = useMemo(() => {
     return DOMPurify.sanitize(marked.parse(text) as string);
@@ -57,22 +60,28 @@ export default function MarkdownEditor() {
         <TextArea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          style={{ minHeight: 480, resize: 'vertical' }}
+          style={{ minHeight: isMobile ? 300 : 480, resize: 'vertical' }}
           className="code-area"
           spellCheck={false}
         />
       )}
       {mode === 'preview' && <Preview html={html} />}
       {mode === 'split' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            gap: 12,
+          }}
+        >
           <TextArea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            style={{ minHeight: 480, resize: 'vertical' }}
+            style={{ minHeight: isMobile ? 300 : 480, resize: 'vertical' }}
             className="code-area"
             spellCheck={false}
           />
-          <div style={{ minHeight: 480, overflow: 'auto' }}>
+          <div style={{ minHeight: isMobile ? 300 : 480, overflow: 'auto' }}>
             <Preview html={html} />
           </div>
         </div>

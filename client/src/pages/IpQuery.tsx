@@ -114,7 +114,7 @@ export default function IpQuery() {
               onPressEnter={queryIp}
               placeholder="输入 IP 地址，如 8.8.8.8"
               style={{ width: 300 }}
-              className="monospace"
+              className="monospace input-fluid"
             />
             <Button type="primary" icon={<SearchOutlined />} onClick={queryIp} loading={loading}>
               查询

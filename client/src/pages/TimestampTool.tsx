@@ -105,7 +105,7 @@ export default function TimestampTool() {
               onChange={(e) => setTsInput(e.target.value)}
               placeholder="输入时间戳（自动识别秒/毫秒）"
               style={{ width: 300 }}
-              className="monospace"
+              className="monospace input-fluid"
             />
             <Button type="primary" onClick={convertTs}>
               转换
@@ -134,6 +134,7 @@ export default function TimestampTool() {
               onChange={(e) => setDateInput(e.target.value)}
               placeholder="如 2024-01-01 12:00:00 或 2024/01/01"
               style={{ width: 300 }}
+              className="input-fluid"
             />
             <Button icon={<SwapOutlined />} type="primary" onClick={convertDate}>
               转换

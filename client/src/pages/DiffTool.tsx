@@ -56,7 +56,7 @@ export default function DiffTool() {
         </Button>
       }
     >
-      <div className="split-layout" style={{ height: 'calc(100vh - 210px)' }}>
+      <div className="split-layout">
         <div className="split-pane">
           <Typography.Text strong className="split-title">
             原始文本

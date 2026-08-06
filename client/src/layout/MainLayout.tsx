@@ -1,6 +1,6 @@
-import { useMemo, Suspense } from 'react';
+import { useMemo, Suspense, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Layout, Menu, Typography, Switch, Space, Spin } from 'antd';
+import { Layout, Menu, Typography, Switch, Space, Spin, Drawer, Button, Grid } from 'antd';
 import {
   CodeOutlined,
   LockOutlined,
@@ -9,10 +9,12 @@ import {
   GlobalOutlined,
   ToolOutlined,
   ApiOutlined,
+  MenuOutlined,
 } from '@ant-design/icons';
 import SearchBox, { SearchItem } from '../components/SearchBox';
 
 const { Sider, Content } = Layout;
+const { useBreakpoint } = Grid;
 
 interface MenuItem {
   key: string;
@@ -92,6 +94,9 @@ export default function MainLayout({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const menuItems = useMemo(() => {
     return menus.map((g) => ({
@@ -104,59 +109,83 @@ export default function MainLayout({
 
   const selectedKey = location.pathname === '/' ? '/json' : location.pathname;
 
+  const sidebarMenu = (
+    <Menu
+      mode="inline"
+      theme={dark ? 'dark' : 'light'}
+      items={menuItems}
+      selectedKeys={[selectedKey]}
+      defaultOpenKeys={menus.map((g) => g.group)}
+      onClick={({ key }) => {
+        navigate(key);
+        setDrawerOpen(false);
+      }}
+      style={{ borderInlineEnd: 'none' }}
+    />
+  );
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        width={220}
-        theme={dark ? 'dark' : 'light'}
-        style={{ borderRight: '1px solid rgba(128,128,128,0.15)' }}
-      >
-        <div
-          style={{
-            height: 56,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 700,
-            fontSize: 18,
-            gap: 8,
-          }}
-        >
-          <ToolOutlined style={{ color: '#1677ff' }} />
-          <span>在线工具箱</span>
-        </div>
-        <Menu
-          mode="inline"
+      {!isMobile && (
+        <Sider
+          width={220}
           theme={dark ? 'dark' : 'light'}
-          items={menuItems}
-          selectedKeys={[selectedKey]}
-          defaultOpenKeys={menus.map((g) => g.group)}
-          onClick={({ key }) => navigate(key)}
-          style={{ borderInlineEnd: 'none' }}
-        />
-      </Sider>
+          style={{ borderRight: '1px solid rgba(128,128,128,0.15)' }}
+        >
+          <div
+            style={{
+              height: 56,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 700,
+              fontSize: 18,
+              gap: 8,
+            }}
+          >
+            <ToolOutlined style={{ color: '#1677ff' }} />
+            <span>在线工具箱</span>
+          </div>
+          {sidebarMenu}
+        </Sider>
+      )}
       <Layout>
         <Layout.Header
           style={{
             height: 48,
             lineHeight: '48px',
-            padding: '0 16px',
+            padding: isMobile ? '0 8px' : '0 16px',
             background: dark ? '#141414' : '#fff',
             borderBottom: '1px solid rgba(128,128,128,0.15)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            gap: 16,
+            gap: 8,
+            position: 'sticky',
+            top: 0,
+            zIndex: 100,
           }}
         >
-          <Typography.Text strong>Tool Station</Typography.Text>
-          <SearchBox items={searchItems} />
-          <Space>
-            <span>暗色</span>
+          {isMobile && (
+            <Button
+              type="text"
+              icon={<MenuOutlined style={{ fontSize: 18 }} />}
+              onClick={() => setDrawerOpen(true)}
+              style={{ flexShrink: 0 }}
+            />
+          )}
+          {!isMobile && <Typography.Text strong>Tool Station</Typography.Text>}
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
+            <div style={{ width: '100%', maxWidth: 420 }}>
+              <SearchBox items={searchItems} />
+            </div>
+          </div>
+          <Space size={isMobile ? 2 : 8} style={{ flexShrink: 0 }}>
+            {!isMobile && <span>暗色</span>}
             <Switch checked={dark} onChange={onToggleDark} size="small" />
           </Space>
         </Layout.Header>
-        <Content style={{ padding: 16, overflow: 'auto' }}>
+        <Content style={{ padding: isMobile ? 8 : 16, overflow: 'auto' }}>
           <Suspense
             fallback={
               <div style={{ display: 'flex', justifyContent: 'center', padding: 80 }}>
@@ -168,6 +197,21 @@ export default function MainLayout({
           </Suspense>
         </Content>
       </Layout>
+      <Drawer
+        placement="left"
+        width={240}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        styles={{ body: { padding: 0 } }}
+        title={
+          <span style={{ fontWeight: 700, fontSize: 16 }}>
+            <ToolOutlined style={{ color: '#1677ff', marginRight: 8 }} />
+            在线工具箱
+          </span>
+        }
+      >
+        {sidebarMenu}
+      </Drawer>
     </Layout>
   );
 }

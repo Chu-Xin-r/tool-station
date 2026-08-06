@@ -74,7 +74,7 @@ export default function ColorConverter() {
             onChange={(e) => setHex(e.target.value)}
             style={{ width: 140 }}
             placeholder="#1677ff"
-            className="monospace"
+            className="monospace input-fluid"
           />
         </Space>
         {rgb ? (

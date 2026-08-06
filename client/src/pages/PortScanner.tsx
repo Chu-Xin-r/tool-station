@@ -120,12 +120,13 @@ export default function PortScanner() {
             onChange={(e) => setHost(e.target.value)}
             placeholder="127.0.0.1"
             style={{ width: 180 }}
-            className="monospace"
+            className="monospace input-fluid"
           />
           <Select
             value={mode}
             onChange={setMode}
             style={{ width: 160 }}
+            className="input-fluid"
             options={[
               { label: '自定义端口列表', value: 'preset' },
               { label: '端口范围扫描', value: 'range' },

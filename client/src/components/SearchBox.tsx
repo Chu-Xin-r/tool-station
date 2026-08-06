@@ -72,7 +72,7 @@ export default function SearchBox({ items }: SearchBoxProps) {
       filterOption={filterOption}
       popupMatchSelectWidth={340}
       notFoundContent={<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="未找到匹配工具" />}
-      style={{ width: 340 }}
+      style={{ width: '100%' }}
     >
       <Input
         allowClear
