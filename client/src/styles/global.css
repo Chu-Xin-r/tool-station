@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.page-container {
+  padding: 8px 4px;
+}
+
+.page-title {
+  margin-bottom: 4px;
+}
+
+.code-area {
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.monospace {
+  font-family: Consolas, 'Courier New', monospace;
+}
+
+.full-area {
+  min-height: 240px;
+  resize: vertical;
+}
+
+/* 双栏左右布局：输入 / 输出对照，占满可视高度 */
+.split-layout {
+  display: flex;
+  gap: 12px;
+  height: calc(100vh - 210px);
+  min-height: 420px;
+}
+
+.split-pane {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.split-pane .split-title {
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.split-pane textarea.ant-input {
+  flex: 1;
+  resize: none;
+}
+
+.split-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.split-bar .ant-space {
+  margin-top: 28px;
+}
+
+@media (max-width: 900px) {
+  .split-layout {
+    flex-direction: column;
+    height: auto;
+  }
+  .split-pane textarea.ant-input {
+    min-height: 220px;
+  }
+}
