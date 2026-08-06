@@ -6,7 +6,6 @@ import {
   Space,
   InputNumber,
   Select,
-  Alert,
   Table,
   Tag,
   Typography,
@@ -29,6 +28,8 @@ const presets = [
   { label: '邮件服务端口', ports: [25, 110, 143, 465, 587, 993, 995] },
   { label: '远程访问端口', ports: [22, 23, 3389, 5900, 5800, 2222] },
 ];
+
+const BLOCKED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '::1', '::', 'cxauo.site']; // 本机/本站地址禁止扫描
 
 const COMMON = [
   21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 445, 993, 995, 1433, 1521, 3306, 3389,
@@ -72,8 +73,13 @@ export default function PortScanner() {
     if (scanning) return;
     const ports = getPorts();
     if (!ports) return;
-    if (!host.trim()) {
+    const h = host.trim().toLowerCase();
+    if (!h) {
       message.warning('请输入主机地址');
+      return;
+    }
+    if (BLOCKED_HOSTS.includes(h)) {
+      message.warning('不允许扫描本机或本站服务器地址');
       return;
     }
     setScanning(true);
@@ -108,12 +114,6 @@ export default function PortScanner() {
   return (
     <Card title="端口扫描">
       <Space direction="vertical" style={{ width: '100%' }} size={12}>
-        <Alert
-          type="warning"
-          showIcon
-          message="扫描由服务器发起，请勿对未授权主机进行扫描。"
-          description="注意：扫描请求由本站后端服务器执行，若填写 127.0.0.1、localhost 或本站域名，将扫描服务器自身端口，可能泄露服务器开放端口，请勿这样做。"
-        />
         <Space wrap>
           <span>目标主机:</span>
           <Input

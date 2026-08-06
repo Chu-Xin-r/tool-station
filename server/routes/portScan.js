@@ -1,9 +1,44 @@
 import net from 'node:net';
+import os from 'node:os';
+import dns from 'node:dns/promises';
 
 let cancelled = false;
 
 export function cancelScan() {
   cancelled = true;
+}
+
+// 获取本机所有 IPv4 地址（含回环与内网）
+function getLocalIPv4s() {
+  const ips = new Set();
+  const ifaces = os.networkInterfaces();
+  for (const list of Object.values(ifaces)) {
+    if (!list) continue;
+    for (const item of list) {
+      if (item.family === 'IPv4') ips.add(item.address);
+    }
+  }
+  return ips;
+}
+
+// 判断目标是否为服务器自身（禁止扫描，防止泄露本机开放端口）
+export async function isLocalHost(host) {
+  const h = String(host || '').trim().toLowerCase();
+  if (!h) return true;
+  if (['localhost', '0.0.0.0', '::1', '::'].includes(h)) return true;
+  const localIPs = getLocalIPv4s();
+  if (localIPs.has(h)) return true;
+  if (/^127\./.test(h)) return true;
+  // 域名：解析后检查是否指向本机
+  if (!/^[\d.]+$/.test(h)) {
+    try {
+      const { address } = await dns.lookup(h);
+      if (localIPs.has(address) || /^127\./.test(address)) return true;
+    } catch {
+      return false; // 解析失败交由扫描流程处理
+    }
+  }
+  return false;
 }
 
 export function scanPorts(host, ports, timeoutSeconds = 1) {

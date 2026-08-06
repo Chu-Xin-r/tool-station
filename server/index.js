@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { scanPorts, cancelScan } from './routes/portScan.js';
+import { scanPorts, cancelScan, isLocalHost } from './routes/portScan.js';
 import { getPublicIp, queryIp } from './routes/ip.js';
 import { proxyRequest } from './routes/proxy.js';
 import {
@@ -67,6 +67,9 @@ app.post('/api/port-scan', async (req, res) => {
     return res.status(400).json({ error: '端口数量不能超过 2000' });
   }
   try {
+    if (await isLocalHost(host)) {
+      return res.status(403).json({ error: '不允许扫描服务器自身地址' });
+    }
     const results = await scanPorts(host, ports, timeout || 1);
     res.json({ results });
   } catch (e) {
