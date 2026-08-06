@@ -37,7 +37,7 @@ const COMMON = [
 ];
 
 export default function PortScanner() {
-  const [host, setHost] = useState('127.0.0.1');
+  const [host, setHost] = useState('');
   const [mode, setMode] = useState<'preset' | 'range'>('preset');
   const [portsText, setPortsText] = useState('21,22,80,443,8080,3306');
   const [startPort, setStartPort] = useState(1);
@@ -111,14 +111,15 @@ export default function PortScanner() {
         <Alert
           type="warning"
           showIcon
-          message="端口扫描需启动 Node 后端 (npm run dev)，且需目标主机允许访问。请勿对未授权主机进行扫描。"
+          message="扫描由服务器发起，请勿对未授权主机进行扫描。"
+          description="注意：扫描请求由本站后端服务器执行，若填写 127.0.0.1、localhost 或本站域名，将扫描服务器自身端口，可能泄露服务器开放端口，请勿这样做。"
         />
         <Space wrap>
           <span>目标主机:</span>
           <Input
             value={host}
             onChange={(e) => setHost(e.target.value)}
-            placeholder="127.0.0.1"
+            placeholder="输入要扫描的主机 IP 或域名"
             style={{ width: 180 }}
             className="monospace input-fluid"
           />
